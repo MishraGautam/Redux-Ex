@@ -13,9 +13,8 @@ import './App.css'
 
 function Reduxwithfunction(){
 	const [results, setResults] = useState({})
-	const themecolor = useSelector(state => state.themereducer)
-	const themebackground = useSelector(state => state.themereducer)
-	const fontsizesmall = useSelector(state => state.sizereducer)
+	const theme = useSelector(state => state.themereducer)
+	const fontsize = useSelector(state => state.sizereducer)
 	const topleft = useSelector(state=> state.bordertopleftreducer)
 	const topright = useSelector(state=> state.bordertoprightreducer)
 	const bottomleft = useSelector(state=> state.borderbottomleftreducer)
@@ -36,7 +35,7 @@ function Reduxwithfunction(){
 		      {results.map((value,index) => {
 	          	return (
 	                <div className="content" style={{borderTopLeftRadius : topleft, borderTopRightRadius : topright, borderBottomLeftRadius : bottomleft, borderBottomRightRadius : bottomright}}>
-	                <p style={{fontSize : fontsizesmall}}>
+	                <p style={{fontSize : fontsize}}>
 			  			Username : {value.username}<br/>
 			            Name : {value.name}<br/>
 			            Email :{value.email}<br/>
@@ -84,7 +83,7 @@ function Reduxwithfunction(){
 	}
 
     return (
-      <div style={{color : themecolor.color, background : themebackground.background}}>
+      <div style={{color : theme.color, background : theme.background}}>
         <Container>
           <Row>
             <Col sm={5} className="content"><h1><Slider min={0} max={50} marks={{ 0: 0, 16: 16, 32: 32, 50: 50 }} step={null} onChange={handleTopLeft} /></h1></Col>

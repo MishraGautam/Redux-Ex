@@ -13,7 +13,7 @@ class App extends Component {
         return (
             <div>
               <Provider store = {myStore}>
-              <Reduxwithfunction/>
+              <Reduxwithclass/>
               </Provider>
             </div>
         );
