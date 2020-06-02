@@ -15,6 +15,9 @@ class MainClass extends Component{
 		super(props);
 		this.state={
 			results : [],
+			namecheck : true,
+			usercheck : true,
+			addresscheck : true,
 		}
 	}
 
@@ -23,6 +26,19 @@ class MainClass extends Component{
 	    axios("https://jsonplaceholder.typicode.com/users")
 	    .then(response => {this.setState({results : response.data})})
 	    .catch(error => {console.log(error)})
+	}
+
+	handleNameCheck =()=>{
+		const {namecheck} = this.state;
+		this.setState({namecheck:!namecheck})
+	}
+	handleUserCheck =()=>{
+		const {usercheck} = this.state;
+		this.setState({usercheck:!usercheck})
+	}
+	handleAddressCheck =()=>{
+		const {addresscheck} = this.state;
+		this.setState({addresscheck:!addresscheck})
 	}
 
 	renderSearchResults = () => {
@@ -35,10 +51,10 @@ class MainClass extends Component{
 	          	return (
 	                <div className="content" style={{borderTopLeftRadius : topleft, borderTopRightRadius : topright, borderBottomLeftRadius : bottomleft, borderBottomRightRadius : bottomright}}>
 	                <p style={{fontSize : fontsize}}>
-			  			Username : {value.username}<br/>
-			            Name : {value.name}<br/>
+			  			{this.state.usercheck === true ? `Username : ${value.username}` : ""}<br/>
+			            {this.state.namecheck === true ? `Name : ${value.name}` : ""}<br/>
 			            Email :{value.email}<br/>
-			            Address : City : {value.address.city}, Street : {value.address.street}, Zip Code : {value.address.zipcode}<br/>
+			            {this.state.addresscheck === true ? `Address : City : ${value.address.city}, Street : ${value.address.street}, Zip Code : ${value.address.zipcode}` : ""}<br/>
 			            Phone : {value.phone}
 		            </p></div>
 	            );
@@ -64,16 +80,16 @@ class MainClass extends Component{
           <Row>
             <Col><Button color="primary" onClick={updateDarkTheme}>Dark Theme</Button></Col>
       	    <Col><Button color="danger" onClick={updateLightTheme}>Light Theme</Button></Col>
-            <Col><Slider min={10} max={30} marks={{ 10: "1x", 20: "2x", 30: "3x" }} step={null} onChange={handleSize}/></Col>
+            <Col><Slider min={10} max={30} marks={{ 10: "1x", 20: "2x", 30: "3x" }} onChange={handleSize}/></Col>
           </Row>
         </Container>
         <br/><br/>
         <Row className="ml-5">
           <Col sm={2}>
            <Form>
-            <FormGroup check><Label check><Input type="checkbox" />{' '}Name</Label></FormGroup><br/>
-            <FormGroup check><Label check><Input type="checkbox" />{' '}Username</Label></FormGroup><br/>
-            <FormGroup check><Label check><Input type="checkbox" />{' '}Address</Label></FormGroup><br/>
+            <FormGroup check><Label check><Input type="checkbox" onChange={this.handleNameCheck} defaultChecked={this.state.namecheck}/>{' '}Name</Label></FormGroup><br/>
+            <FormGroup check><Label check><Input type="checkbox" onChange={this.handleUserCheck} defaultChecked={this.state.usercheck}/>{' '}Username</Label></FormGroup><br/>
+            <FormGroup check><Label check><Input type="checkbox" onChange={this.handleAddressCheck} defaultChecked={this.state.addresscheck}/>{' '}Address</Label></FormGroup><br/>
            </Form>
           </Col>
           <Col>{this.renderSearchResults()}</Col>
@@ -94,7 +110,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         updateDarkTheme: ()=> dispatch(darktheme()),
-        updateLightTheme : ()=>dispatch(lighttheme()),
+        updateLightTheme: ()=>dispatch(lighttheme()),
+
         handleSize : (value)=>{
 		if(value === 10) dispatch(smallsize())
 			else if(value === 20) dispatch(mediumsize())

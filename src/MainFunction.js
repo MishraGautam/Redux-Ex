@@ -13,6 +13,9 @@ import './App.css'
 
 function Reduxwithfunction(){
 	const [results, setResults] = useState({})
+	const [namecheck, setNameCheck] = useState(true)
+	const [usercheck, setUserCheck] = useState(true)
+	const [addresscheck, setAddressCheck] = useState(true)
 	const theme = useSelector(state => state.themereducer)
 	const fontsize = useSelector(state => state.sizereducer)
 	const topleft = useSelector(state=> state.bordertopleftreducer)
@@ -28,6 +31,15 @@ function Reduxwithfunction(){
 	    .catch(error => {console.log(error)})
 	},[])
 
+	const handleNameCheck =()=>{
+		setNameCheck(!namecheck)
+	}
+	const handleUserCheck =()=>{
+		setUserCheck(!usercheck)
+	}
+	const handleAddressCheck =()=>{
+		setAddressCheck(!addresscheck)
+	}
 	const renderSearchResults = () => {
 		if (Object.keys(results).length && results.length) {
 			return (
@@ -36,11 +48,12 @@ function Reduxwithfunction(){
 	          	return (
 	                <div className="content" style={{borderTopLeftRadius : topleft, borderTopRightRadius : topright, borderBottomLeftRadius : bottomleft, borderBottomRightRadius : bottomright}}>
 	                <p style={{fontSize : fontsize}}>
-			  			Username : {value.username}<br/>
-			            Name : {value.name}<br/>
+			  			{usercheck === true ?`Username : ${value.username}` : ""}<br/>
+			            {namecheck === true ? `Name : ${value.name}` : ""}<br/>
 			            Email :{value.email}<br/>
-			            Address : City : {value.address.city}, Street : {value.address.street}, Zip Code : {value.address.zipcode}<br/>
+			            {addresscheck === true ?`Address : City : ${value.address.city}, Street : ${value.address.street}, Zip Code : ${value.address.zipcode}` : ""}<br/>
 			            Phone : {value.phone}
+
 		            </p></div>
 	            );
 		       })}
@@ -104,9 +117,9 @@ function Reduxwithfunction(){
         <Row className="ml-5">
           <Col sm={2}>
            <Form>
-            <FormGroup check><Label check><Input type="checkbox" />{' '}Name</Label></FormGroup><br/>
-            <FormGroup check><Label check><Input type="checkbox" />{' '}Username</Label></FormGroup><br/>
-            <FormGroup check><Label check><Input type="checkbox" />{' '}Address</Label></FormGroup><br/>
+            <FormGroup check><Label check><Input type="checkbox" onChange={handleNameCheck} defaultChecked={namecheck} />{' '}Name</Label></FormGroup><br/>
+            <FormGroup check><Label check><Input type="checkbox" onChange={handleUserCheck} defaultChecked={usercheck} />{' '}Username</Label></FormGroup><br/>
+            <FormGroup check><Label check><Input type="checkbox" onChange={handleAddressCheck} defaultChecked={addresscheck} />{' '}Address</Label></FormGroup><br/>
            </Form>
           </Col>
           <Col>{renderSearchResults()}</Col>
