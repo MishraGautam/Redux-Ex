@@ -1,3 +1,4 @@
+import apireducer from './apireducer'
 import sizereducer from './sizereducer'
 import themereducer from './themereducer'
 import bordertopleftreducer from './bordertopleftreducer'
@@ -7,6 +8,7 @@ import borderbottomrightreducer from './borderbottomrightreducer'
 import {combineReducers} from 'redux'
 
 const allReducers = combineReducers({
+	apireducer,
 	themereducer,
 	sizereducer,
 	bordertopleftreducer,

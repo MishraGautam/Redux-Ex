@@ -13,9 +13,9 @@ import './App.css'
 
 function Reduxwithfunction(){
 	const [results, setResults] = useState({})
-	const [namecheck, setNameCheck] = useState(true)
-	const [usercheck, setUserCheck] = useState(true)
-	const [addresscheck, setAddressCheck] = useState(true)
+	const [namecheck, setNameCheck] = useState(false)
+	const [usercheck, setUserCheck] = useState(false)
+	const [addresscheck, setAddressCheck] = useState(false)
 	const theme = useSelector(state => state.themereducer)
 	const fontsize = useSelector(state => state.sizereducer)
 	const topleft = useSelector(state=> state.bordertopleftreducer)
@@ -24,12 +24,13 @@ function Reduxwithfunction(){
 	const bottomright = useSelector(state=> state.borderbottomrightreducer)
 	const dispatch = useDispatch();
 
-
 	useEffect(()=>{ 
 	    axios("https://jsonplaceholder.typicode.com/users")
 	    .then(response => {setResults(response.data);})
 	    .catch(error => {console.log(error)})
 	},[])
+
+
 
 	const handleNameCheck =()=>{
 		setNameCheck(!namecheck)
@@ -48,8 +49,8 @@ function Reduxwithfunction(){
 	          	return (
 	                <div className="content" style={{borderTopLeftRadius : topleft, borderTopRightRadius : topright, borderBottomLeftRadius : bottomleft, borderBottomRightRadius : bottomright}}>
 	                <p style={{fontSize : fontsize}}>
+	                	{namecheck === true ? `Name : ${value.name}` : ""}<br/>
 			  			{usercheck === true ?`Username : ${value.username}` : ""}<br/>
-			            {namecheck === true ? `Name : ${value.name}` : ""}<br/>
 			            Email :{value.email}<br/>
 			            {addresscheck === true ?`Address : City : ${value.address.city}, Street : ${value.address.street}, Zip Code : ${value.address.zipcode}` : ""}<br/>
 			            Phone : {value.phone}

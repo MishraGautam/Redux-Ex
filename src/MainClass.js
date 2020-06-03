@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {lighttheme, darktheme, smallsize, mediumsize, largesize, topleftbordersmall, topleftbordermedium, topleftborderlarge, topleftborderxlarge, toprightbordersmall,
+import {fetchapi, lighttheme, darktheme, smallsize, mediumsize, largesize, topleftbordersmall, topleftbordermedium, topleftborderlarge, topleftborderxlarge, toprightbordersmall,
 toprightbordermedium, toprightborderlarge, toprightborderxlarge, bottomleftbordersmall, bottomleftbordermedium, bottomleftborderlarge, bottomleftborderxlarge,
 bottomrightbordersmall, bottomrightbordermedium, bottomrightborderlarge, bottomrightborderxlarge} from './actions/actionindex'
 import {Form, FormGroup, Input, Label, Row, Col, Container, Button} from 'reactstrap'
@@ -14,18 +14,10 @@ class MainClass extends Component{
 	constructor(props){
 		super(props);
 		this.state={
-			results : [],
-			namecheck : true,
-			usercheck : true,
-			addresscheck : true,
+			namecheck : false,
+			usercheck : false,
+			addresscheck : false,
 		}
-	}
-
-	componentDidMount() {
-		const {results}= this.state;
-	    axios("https://jsonplaceholder.typicode.com/users")
-	    .then(response => {this.setState({results : response.data})})
-	    .catch(error => {console.log(error)})
 	}
 
 	handleNameCheck =()=>{
@@ -42,29 +34,23 @@ class MainClass extends Component{
 	}
 
 	renderSearchResults = () => {
-		const {results} = this.state;
-		const {fontsize, topleft, topright, bottomleft, bottomright} = this.props;
-		if (Object.keys(results).length && results.length) {
-			return (
-			<div>
-		      {this.state.results.map((value,index) => {
-	          	return (
-	                <div className="content" style={{borderTopLeftRadius : topleft, borderTopRightRadius : topright, borderBottomLeftRadius : bottomleft, borderBottomRightRadius : bottomright}}>
-	                <p style={{fontSize : fontsize}}>
-			  			{this.state.usercheck === true ? `Username : ${value.username}` : ""}<br/>
-			            {this.state.namecheck === true ? `Name : ${value.name}` : ""}<br/>
+		const {userdata, fontsize, topleft, topright, bottomleft, bottomright} = this.props;
+		const {usercheck, namecheck, addresscheck}= this.state;
+			return userdata.error ? <h2>{userdata.error}</h2> :
+				 userdata && userdata.users && userdata.users.map(value => 
+				 	<div className="content" style={{borderTopLeftRadius : topleft, borderTopRightRadius : topright, borderBottomLeftRadius : bottomleft, borderBottomRightRadius : bottomright}}>
+						<p style={{fontSize : fontsize}}>
+						{namecheck === true ? `Name : ${value.name}` : ""}<br/>
+			  			{usercheck === true ?`Username : ${value.username}` : ""}<br/>
 			            Email :{value.email}<br/>
-			            {this.state.addresscheck === true ? `Address : City : ${value.address.city}, Street : ${value.address.street}, Zip Code : ${value.address.zipcode}` : ""}<br/>
+			            {addresscheck === true ?`Address : City : ${value.address.city}, Street : ${value.address.street}, Zip Code : ${value.address.zipcode}` : ""}<br/>
 			            Phone : {value.phone}
-		            </p></div>
-	            );
-		       })}
-			</div>
-			);
-	}};
+		            </p>
+					</div>)
+	};
 
 	render(){
-		const {theme, updateDarkTheme, updateLightTheme, handleSize, handleTopLeft,handleBottomLeft,handleTopRight,handleBottomRight } = this.props;
+		const {fetchUsers, theme, updateDarkTheme, updateLightTheme, handleSize, handleTopLeft,handleBottomLeft,handleTopRight,handleBottomRight } = this.props;
     return (
       <div style={{color : theme.color, background : theme.background}}>
         <Container>
@@ -78,6 +64,7 @@ class MainClass extends Component{
           </Row>
           <br/><br/>
           <Row>
+          <Col><Button color="primary" onClick={fetchUsers}>Fetch Users</Button></Col>
             <Col><Button color="primary" onClick={updateDarkTheme}>Dark Theme</Button></Col>
       	    <Col><Button color="danger" onClick={updateLightTheme}>Light Theme</Button></Col>
             <Col><Slider min={10} max={30} marks={{ 10: "1x", 20: "2x", 30: "3x" }} onChange={handleSize}/></Col>
@@ -99,7 +86,8 @@ class MainClass extends Component{
 }}
 
 const mapStateToProps = (state) => {
-    return {theme: state.themereducer,
+    return {userdata : state.apireducer,
+    		theme: state.themereducer,
     		fontsize : state.sizereducer,
     		topleft : state.bordertopleftreducer,
     		topright : state.bordertoprightreducer,
@@ -109,6 +97,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+    	fetchUsers : ()=> dispatch(fetchapi()),
         updateDarkTheme: ()=> dispatch(darktheme()),
         updateLightTheme: ()=>dispatch(lighttheme()),
 

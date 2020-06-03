@@ -1,3 +1,33 @@
+import axios from 'axios'
+
+export const apisuccess = (users)=>{
+	return{
+		type : 'API_SUCCESS',
+		payload : users
+	}
+}
+
+export const apifailure = (errormsg)=>{
+	return{
+		type : 'API_FAILURE',
+		payload : errormsg
+	}
+}
+
+export const fetchapi = ()=>{
+	return (dispatch)=>{
+		axios.get("https://jsonplaceholder.typicode.com/users")
+	    .then(response => {
+	    	const users = response.data
+	    	dispatch(apisuccess(users))
+	    })
+	    .catch(error => {
+	    	const errormsg = error.message
+	    	dispatch(apifailure(errormsg))
+	    })
+	}
+}
+
 export const lighttheme = ()=>{
 	const payload = {
 		color : 'black',
